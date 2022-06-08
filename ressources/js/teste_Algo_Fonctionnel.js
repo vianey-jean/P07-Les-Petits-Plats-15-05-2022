@@ -1,4 +1,4 @@
-const recipes = [
+const data = [
     {
         "id": 1,
         "name" : "Limonade de Coco",
@@ -20,7 +20,7 @@ const recipes = [
             },
             {
                 "ingredient" : "Sucre",
-                "quantite" : 30,
+                "quantity" : 30,
                 "unit" : "grammes"
             },
             {
@@ -52,7 +52,7 @@ const recipes = [
             },
             {
                 "ingredient" : "Carotte",
-                "quantite" : 1
+                "quantity" : 1
             },
             {
                 "ingredient" : "Citron Vert",
@@ -97,8 +97,6 @@ const recipes = [
             },
             {
                 "ingredient": "Huile d'olive"
-                "quantity": 1,
-               "unit": "cuillères à soupe"
             }
         ],
         "time": 80,
@@ -174,7 +172,7 @@ const recipes = [
            {
                 "ingredient": "Moutarde de Dijon",
                 "quantity": 1,
-                "unite": "cuillères à soupe"
+                "unit": "cuillères à soupe"
            }
         ],
         "time": 45,
@@ -575,7 +573,7 @@ const recipes = [
             }
         ],
         "time": 45,
-        "description":"Faire cuire les pâtes si vous n'avez pas de pennes des coquillettes peuvent faire l'affaire. Découper les tomates en petits morceaux, soit en tranches soit en dés. Coupez le basilic en petites morceaux et mélangez le aux tomates.  Coupez la mozzarella en tranche. Préchauffez le four à 200°. Alternez entre couches de pattes et couches de tomates, terminez par une couche de pates et recouvrir du fromage. Laisser au four 30 minutes et régalez vous ! Une recette simple qui fera plaisir au petits comme aux grands.",
+        "description":"Faire cuire les pâtes si vous n'avez pas de pennes des coquillettes peuvent faire l'affaire. Découper les tomates en petits morceaux, soit en tranches soit en dés. Coupez le basilic en petites morceaux et mélangez le aux tomates.  Coupez la mozzarella en tranche. Préchauffez le four à 200°. Alternez entre couches de pattes et couches de tomates, saisieUtilinez par une couche de pates et recouvrir du fromage. Laisser au four 30 minutes et régalez vous ! Une recette simple qui fera plaisir au petits comme aux grands.",
         "appliance": "Four",
         "ustensils":["plat à gratin", "couteau", "râpe à fromage"]
     },
@@ -1262,7 +1260,7 @@ const recipes = [
             }
         ],
         "time": 35,
-        "description":"Raper les courgette et les faire revenir durant 15 minutes. Ajouter les fromages de chèvre frais. Préparer la béchamelle avec le lait et la maizena. Salez poivrez, ajouter de la noix de muscade selon les gouts. Dans un plat, mettre un peu de sauces au fond, puis des lasagnes, puis des courgettes etc... terminer par de la sauces et ajouter le gruiyère. Passer au four à 180° durant 20 à 25 minutes.",
+        "description":"Raper les courgette et les faire revenir durant 15 minutes. Ajouter les fromages de chèvre frais. Préparer la béchamelle avec le lait et la maizena. Salez poivrez, ajouter de la noix de muscade selon les gouts. Dans un plat, mettre un peu de sauces au fond, puis des lasagnes, puis des courgettes etc... saisieUtiliner par de la sauces et ajouter le gruiyère. Passer au four à 180° durant 20 à 25 minutes.",
         "appliance": "Four",
         "ustensils":["plat à gratin", "râpe à fromage", "fouet"]
     },
@@ -1723,4 +1721,39 @@ const recipes = [
         "appliance": "Four",
         "ustensils":["rouleau à patisserie","fouet"]
     }
-]
+];
+
+class Recipe {
+    constructor(data) {
+        this.id = data.id;//Prendre id
+        this.name = data.name.toLowerCase();//nom et mettre en miniscule
+        this.servings = data.servings;//servings
+        this.time = data.time;//date
+        this.description = data.description;//description
+        this.appliance = data.appliance.toLowerCase();//appliance et en miniscule
+        this.ustensils = [];//tableau ustensils
+        data.ustensils.forEach((ustensil) => this.ustensils.push(ustensil.toLowerCase()));//prendre tous les ustensils et mettre dans la nouvelle tableau et en miniscule
+        this.ingredients = [];//tableau ingredient
+        data.ingredients.forEach( (ingredient) => this.ingredients.push(new Ingredient(ingredient)));//prendre tous les ingredients et mettre dans la nouvelle tableau
+    }
+}
+
+class Ingredient {
+    constructor(data) {
+        this.name = data.ingredient.toLowerCase();// prendre les ingredient 
+        if (data.quantity) this.quantity = data.quantity;// si quantité, alors quantité = data.quantité
+        if (data.unit) this.unit = data.unit;//si unité, alors unite = data unit
+    }
+}
+let recette = [];//tableau recette
+data.forEach((recipe) => recette.push(new Recipe(recipe)));//prendre tous les donné et mettre dans nouvelle tableau
+
+const saisieUtil = 'coco';//variable saisie utilisateur 'coco'
+recette = recette.filter((recipe) => {//prendre tous les recette si...
+    if (recipe.name.includes(saisieUtil)) return true;//si le saisie est dans le nom
+    if (recipe.description.toLowerCase().includes(saisieUtil)) return true;// si le saisie est dans description
+    else if (!!recipe.ingredients.find((ingredient) => ingredient.name.includes(saisieUtil))) return true;//dans le parcours de chacun ingredient, si la saisie est dans le ingredient
+    
+    return false;
+});
+
