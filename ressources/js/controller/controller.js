@@ -55,29 +55,18 @@
       */
 
            filterSearch(recette) {
-            // cherche dans  name, description, appliance, ingredients name, ustensils
-            const saisieUtil = this.dom.search.value.toLowerCase();
-            const filtered = [];
-            let limit=recette.length;
-            for (let cpt = 0; cpt < limit ; cpt++) {
-                const recipe = recette[cpt];
-                if (recipe.name.includes(saisieUtil)) filtered.push(recipe);
-                else if (recipe.description.toLowerCase().includes(saisieUtil)) filtered.push(recipe);
-                else {
-                    let find = false;
-                    let cptIng = 0;
-                    let limitIng = recipe.ingredients.length;
-                    while (cptIng < limitIng) {
-                        const ingredient = recipe.ingredients[cptIng].name;
-                        if (find = ingredient.includes(saisieUtil)) {
-                            filtered.push(recipe);
-                            break;
-                        }
-                        cptIng++;
-                    }
-                }
-            }
-            return filtered;
+            // cherche dans  name, description, ingredients name
+        const saisieUtil = this.dom.search.value.toLowerCase();
+        recette = recette.filter((recipe) => {
+            if (recipe.name.includes(saisieUtil)) return true;
+           if (recipe.description.toLowerCase().includes(saisieUtil)) return true;
+           if (recipe.appliance.includes(saisieUtil)) return true;
+           if (!!recipe.ustensils.find((ustensil) => ustensil.includes(saisieUtil))) return true;
+           else if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
+            return false;
+
+        });
+        return recette;
         },
  
 
