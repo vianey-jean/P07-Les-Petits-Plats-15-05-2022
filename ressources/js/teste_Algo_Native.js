@@ -573,7 +573,7 @@ const data = [
             }
         ],
         "time": 45,
-        "description":"Faire cuire les pâtes si vous n'avez pas de pennes des coquillettes peuvent faire l'affaire. Découper les tomates en petits morceaux, soit en tranches soit en dés. Coupez le basilic en petites morceaux et mélangez le aux tomates.  Coupez la mozzarella en tranche. Préchauffez le four à 200°. Alternez entre couches de pattes et couches de tomates, saisieUtilinez par une couche de pates et recouvrir du fromage. Laisser au four 30 minutes et régalez vous ! Une recette simple qui fera plaisir au petits comme aux grands.",
+        "description":"Faire cuire les pâtes si vous n'avez pas de pennes des coquillettes peuvent faire l'affaire. Découper les tomates en petits morceaux, soit en tranches soit en dés. Coupez le basilic en petites morceaux et mélangez le aux tomates.  Coupez la mozzarella en tranche. Préchauffez le four à 200°. Alternez entre couches de pattes et couches de tomates, saisieUtilinez par une couche de pates et recouvrir du fromage. Laisser au four 30 minutes et régalez vous ! Une data simple qui fera plaisir au petits comme aux grands.",
         "appliance": "Four",
         "ustensils":["plat à gratin", "couteau", "râpe à fromage"]
     },
@@ -1723,37 +1723,54 @@ const data = [
     }
 ];
 
+/*
+Prendre tous les valeurs du json
+*/
 class Recipe {
     constructor(data) {
-        this.id = data.id;//Prendre id
-        this.name = data.name.toLowerCase();//nom et mettre en miniscule
-        this.servings = data.servings;//servings
-        this.time = data.time;//date
-        this.description = data.description;//description
-        this.appliance = data.appliance.toLowerCase();//appliance et en miniscule
-        this.ustensils = [];//tableau ustensils
-        data.ustensils.forEach((ustensil) => this.ustensils.push(ustensil.toLowerCase()));//prendre tous les ustensils et mettre dans la nouvelle tableau et en miniscule
-        this.ingredients = [];//tableau ingredient
-        data.ingredients.forEach( (ingredient) => this.ingredients.push(new Ingredient(ingredient)));//prendre tous les ingredients et mettre dans la nouvelle tableau
+        this.id = data.id;
+        this.name = data.name;
+        this.servings = data.servings;
+        this.time = data.time;
+        this.description = data.description;
+        this.appliance = data.appliance.toLowerCase();
+        this.ustensils = [];
+        data.ustensils.forEach((ustensil) => this.ustensils.push(ustensil.toLowerCase()));
+        this.ingredients = [];
+        data.ingredients.forEach( (ingredient) => this.ingredients.push(new Ingredient(ingredient)));
     }
 }
 
 class Ingredient {
     constructor(data) {
-        this.name = data.ingredient.toLowerCase();// prendre les ingredient 
-        if (data.quantity) this.quantity = data.quantity;// si quantité, alors quantité = data.quantité
-        if (data.unit) this.unit = data.unit;//si unité, alors unite = data unit
+        this.name = data.ingredient.toLowerCase();
+        if (data.quantity) this.quantity = data.quantity;
+        if (data.unit) this.unit = data.unit;
     }
 }
-let recette = [];//tableau recette
-data.forEach((recipe) => recette.push(new Recipe(recipe)));//prendre tous les donné et mettre dans nouvelle tableau
 
-const saisieUtil = 'coco';//variable saisie utilisateur 'coco'
-recette = recette.filter((recipe) => {//prendre tous les recette si...
-    if (recipe.name.includes(saisieUtil)) return true;//si le saisie est dans le nom
-    if (recipe.description.toLowerCase().includes(saisieUtil)) return true;// si le saisie est dans description
-    else if (!!recipe.ingredients.find((ingredient) => ingredient.name.includes(saisieUtil))) return true;//dans le parcours de chacun ingredient, si la saisie est dans le ingredient
-    
-    return false;
-});
+let recette = [];
+data.forEach((recipe) => recette.push(new Recipe(recipe)));
 
+const saisieUtil = 'coco';
+const filtered = [];
+let limit=recette.length;
+for (let cpt = 0; cpt < limit; cpt++) {
+    const recipe = recette[cpt];
+    if (recipe.name.includes(saisieUtil)) filtered.push(recipe);
+    else if (recipe.description.toLowerCase().includes(saisieUtil)) filtered.push(recipe);
+    else {
+        let cherche = false;
+        let cptCh = 0;
+        let finIng = recipe.ingredients.length;
+        while (cptCh < finIng) {
+            const ingredient = recipe.ingredients[cptCh].name;
+            if (cherche = ingredient.includes(saisieUtil)) {
+                filtered.push(recipe);
+                break;
+            }
+            cptCh++;
+        }
+  
+    }
+}
