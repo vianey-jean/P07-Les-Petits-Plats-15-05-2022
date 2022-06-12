@@ -1,13 +1,4 @@
-/**
- * Les petits plats
- * Main sass file
- */
-/**
- * Variable
- */
-/**
- * Soft reset
- */
+
  *, *::before, *::after {
   box-sizing: border-box;
   min-width: 0;
@@ -144,9 +135,11 @@ width: 100%;
 }
 .combobox.expanded {
   width: 41.6875rem;
+  z-index: 1000;
 }
 .combobox.active:not(.expanded) {
   width: 17rem;
+  z-index: 1000;
 }
 .combobox-wrapper {
   position: absolute;
@@ -159,7 +152,9 @@ width: 100%;
   height: auto;
   border-radius: 0.3125rem;
   color: #FFFFFF;
+
 }
+
 .combobox-primary .combobox-wrapper {
   background-color: #3282F7;
 }
@@ -361,7 +356,7 @@ b {
   width: 100%;
   max-width: 90rem;
   margin: 0 auto;
-  padding: 0 6.25rem 2.625rem;
+  padding: 0 2.25rem 2.625rem;
 }
 
 .search {
@@ -426,5 +421,3 @@ h6{
   margin-left: auto;
   margin-right: auto ;
 }
-
-/*# sourceMappingURL=main.css.map */

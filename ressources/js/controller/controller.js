@@ -51,32 +51,32 @@
      },
  
           /**
-      * Filtre de recherche
+      * Filtre dans le barre de recherche
       */
 
            filterSearch(recette) {
             // cherche dans  name, description, ingredients name
         const saisieUtil = this.dom.search.value.toLowerCase();
         recette = recette.filter((recipe) => {
-            if (recipe.name.includes(saisieUtil)) return true;
+            if (recipe.name.toLowerCase().includes(saisieUtil)) return true;
            if (recipe.description.toLowerCase().includes(saisieUtil)) return true;
-           if (recipe.appliance.includes(saisieUtil)) return true;
-           if (!!recipe.ustensils.find((ustensil) => ustensil.includes(saisieUtil))) return true;
-           else if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
+           
+           if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
+           //else if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
             return false;
 
         });
         return recette;
         },
  
-
+//ouverture pour être active les tags dans ingrédient, appareils et ustensils
      activeIn (filter) {
-         if (this.stateFilter) this.activeOut();// Close active filter
-         this.stateFilter = filter;// Set active filter
-         // Listen click outside
+         if (this.stateFilter) this.activeOut();// Fermeture des filtre active
+         this.stateFilter = filter;// Définir le filtre active
+         // Clique dehors
          this.clickOutsideListener = this.clickOutside.bind(this);
          document.addEventListener("click", this.clickOutsideListener);
-         // Set visual active state
+         // Définir l'état actif visuel
          filter.container.classList.add('active');
          filter.label.style.display = 'none';
          filter.input.style.display = '';
@@ -84,27 +84,27 @@
          this.renderFilter();
      },
  
- 
+ //Fermeture pour etre active les tags dans ingrédient, appareils et ustensils
      activeOut () {
          document.removeEventListener("click", this.clickOutsideListener);
          const filter = this.stateFilter;// Shortcut
-         // Reset visual active state
+         // Réinitialiser l'état actif visuel
          filter.container.classList.remove('active');
          filter.container.classList.remove('expanded');
          filter.label.style.display = '';
          filter.input.style.display = 'none';
          filter.input.value = "";
          filter.results.style.display = 'none';
-         // Remove active filter
+         //Supprimer le filtre actif
          this.stateFilter = null;
      },
  
- 
+ //activation du svg pour montrer les tags respectives
      toggle (filter) {
-         if (this.stateFilter != filter) this.activeIn(filter);// Not active do it
-         // Toggle visual expanded state
+         if (this.stateFilter != filter) this.activeIn(filter);
+         // Bascule l'état visuel développé
          filter.container.classList.toggle('expanded');
-         // Focus input on open
+         // Concentrer l'entrée sur l'ouverture
          if (filter.container.classList.contains('expanded')) filter.input.focus();
      },
  
@@ -118,7 +118,7 @@
      },
  
      /**
-      * Ajout des tags
+      * Ajout des tags au dessus
       */
      addTag (tag) {
          const id = this.stateTags.findIndex((item) => item.name == tag.name);
@@ -130,7 +130,7 @@
      },
  
      /**
-      * suppression du tags
+      * suppression du tags au dessus
       */
  
      removeTag (tag) {
@@ -143,7 +143,7 @@
      },
  
      /**
-      * cherche tags active
+      * activation des tags
       */
      tagIsActive (tag) {
          const id = this.stateTags.findIndex((item) => item.name == tag.name && item.type == tag.type );
@@ -174,7 +174,7 @@
      },
  
  /**
-  * Fonction mise a jour du tag
+  * Fonction mise a jour du tag avec les filtres  et mettre dans les tags repesctives, (ingredients, appareil et ustensils)
   */
      updateAvailableTags (recette = this.filteredRecipes) {
          // supprimer tags
@@ -199,16 +199,16 @@
   
      applyFilterRecipes () {
          let filtered = [];
-         if (this.dom.search.value.length < 3) filtered = this.recette;
-         else filtered = this.filterSearch(this.recette);// cherche filtre
+         if (this.dom.search.value.length < 3) filtered = this.recette;// si la saisie utilisateur est < 3, montre tous les recettes
+         else filtered = this.filterSearch(this.recette);// si non applique la fonction filterSearch pour les filtre de la recherche avec la saisie utilisateur
          this.checkStateTags(filtered);// efface les tags active invalide
-         filtered = this.filterTags(filtered);//filtre tags
-         this.updateAvailableTags(filtered);
+         filtered = this.filterTags(filtered);//filtre tags en meme temps suivant la saaisie utilisateur
+         this.updateAvailableTags(filtered);//utilisation du fonction updateavailableTags pour mettre a jours les tags dans ingrédient et appareil suivant la saisie utilisateur
          if (this.stateFilter) this.renderFilter();// Rerender en active
          return this.filteredRecipes = filtered;
      },
 
-     
+    //mise en forme les atgs selectionnées 
      renderTags () {
         this.dom.tags.innerHTML = '';
         this.stateTags.forEach((tag) => {
@@ -218,7 +218,9 @@
         });
     },
 
-
+/**
+ * création d'une fonction pour faire de recherche même plus de 1 caractère dans les tags et les activé
+ */
     renderFilter () {
         if (!this.stateFilter) return;
         const filter = this.stateFilter; // Shortcut
@@ -238,38 +240,44 @@
         if (filter.results.children.length > 0) filter.results.style.display = '';
     },
 
-
+/**
+ * fonction pour mettre le message erreur
+ */
     renderRecipes () {
-        this.dom.norecipes.style.display = 'none';
-        this.applyFilterRecipes();
+        this.dom.norecipes.style.display = 'none';//message erreur est inactive
+        this.applyFilterRecipes();//application des filtres de recherche sur barre de recherche
         this.dom.recette.innerHTML = '';
-        //if (this.dom.search.value.length < 3 && this.stateTags.length == 0) return;
-        this.filteredRecipes.forEach((recipe) => {
-            this.dom.recette.append(recipe.render());
+        this.filteredRecipes.forEach((recipe) => {//rendre visible tous les recettes
+            this.dom.recette.append(recipe.render());//mettre dans nouvelle tableau les recette
         });
-        if (this.filteredRecipes.length == 0) this.dom.norecipes.style.display = '';
+        if (this.filteredRecipes.length == 0) this.dom.norecipes.style.display = '';// si recherche est = 0, affiche message erreur
     },
-
+/**
+ * Connection avec le fichier data
+ */
 
      async fetchData () {
          recette.forEach((recipe) => this.recette.push(new Recipe(recipe)));
          return new Promise((resolve) => resolve(''));
      },
 
+     /**
+      * création fonction init
+      */
      async init () {
-        await this.fetchData();
+        await this.fetchData();//attendre les donné avec fetchdata
         this.renderRecipes();
-        // Bind
+        // activation du recherche sur tags 
         for (const [, filter] of Object.entries(this.dom.filters)) {
-            filter.label.addEventListener('click', (e) => {// Active state
+            filter.label.addEventListener('click', (e) => {// Saisie dans les tags soit active
                 this.activeIn(filter);
             });
-            filter.expand.addEventListener('click', (e) => {// Expand state
+            filter.expand.addEventListener('click', (e) => {// Icon svg soit active
                 this.toggle(filter);
             });
-            filter.input.addEventListener('keyup', this.renderFilter.bind(this));// Filter input change
+            filter.input.addEventListener('keyup', this.renderFilter.bind(this));// changement entré filtre
         }
-        this.dom.search.addEventListener('keyup', this.renderRecipes.bind(this));// Search input change
+        this.dom.search.addEventListener('keyup', this.renderRecipes.bind(this));// Modification de l'entrée de recherche
     },
  }
  

@@ -37,7 +37,7 @@ export default class Recipe {
     }
 
  
-    tagAvailable (tag) {
+    tagAvailable (tag) {//pour montrer les tags qui son inclue dans chaque type avec le nom du tag
         if (tag.type == 'ingredients') return !! this.ingredients.find((ingredient) => ingredient.name == tag.name);
         if (tag.type == 'ustensils') return this.ustensils.includes(tag.name);
         if (tag.type == 'appliances') return this.appliance == tag.name;
