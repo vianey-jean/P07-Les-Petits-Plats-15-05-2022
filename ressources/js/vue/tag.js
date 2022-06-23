@@ -11,6 +11,9 @@ export default class Tag {
         this.type = type;
     }
 
+    /**
+     * Mise en forme dans tag sous la barre principale 
+     */
     renderTag(classSuffix = 'primary') {
         const elTag = document.createElement('span');
         elTag.classList.add('tag');
@@ -28,6 +31,9 @@ export default class Tag {
         return elTag;
     }
 
+    /**
+     * mise en forme les valeur dans les champs
+     */
 
     renderLi() {
         const elTag = document.createElement('li');
