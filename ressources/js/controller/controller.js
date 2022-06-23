@@ -13,39 +13,54 @@ import Tag from "../vue/tag.js";
 import DomFilter from "../models/domFilter.js";
 
 export default {
-
+    /**
+     * Création du tableau comme recette pour resultat de recherche
+     * Filterecipes = tous les recette
+     */
     recette: [],
     filteredRecipes: [],
 
     filterTypes: ['ingredients', 'appliances', 'ustensils'],
 
+    /**
+     * Création du tableau pour recuperaion des ingredients, appareils et ustensils
+     */
     tags: {
         ingredients: [],
         ustensils: [],
         appliances: []
     },
 
+    /**
+     * mise en forme des tags
+     */
     tagsClasses: {
         ingredients: 'primary',
         appliances: 'success',
         ustensils: 'danger',
     },
 
+    /**
+     * Création du tableau tags
+     */
     stateTags: [],
 
 
     stateFilter: undefined,
 
+    /**
+     * relier à la page index pour selector
+     */
     dom: {
-        search: document.querySelector('[data-search]'),
-        tags: document.querySelector('[data-filter-tags]'),
+        search: document.querySelector('[data-search]'), //Selection sur le barre de recherche
+        tags: document.querySelector('[data-filter-tags]'),//selection sur les tags
         filters: {
-            ingredients: new DomFilter(document.querySelector('[data-filter="ingredients"]')),
-            appliances: new DomFilter(document.querySelector('[data-filter="appliances"]')),
-            ustensils: new DomFilter(document.querySelector('[data-filter="ustensils"]')),
+            ingredients: new DomFilter(document.querySelector('[data-filter="ingredients"]')),//selection dans ingredients
+            appliances: new DomFilter(document.querySelector('[data-filter="appliances"]')),//selection dans apparareil
+            ustensils: new DomFilter(document.querySelector('[data-filter="ustensils"]')),//selection dans ustensils
         },
-        recette: document.querySelector('[data-recipes]'),
-        norecipes: document.querySelector('[data-norecipes]'),
+        recette: document.querySelector('[data-recipes]'),//selection a la resultat recette
+        norecipes: document.querySelector('[data-norecipes]'),//selection message erreur sur resultats
     },
 
     /**
@@ -54,7 +69,10 @@ export default {
 
     filterSearch(recette) {
         // cherche dans  name, description, ingredients name
-        const saisieUtil = this.dom.search.value.toLowerCase();
+        const saisieUtil = this.dom.search.value.toLowerCase();//saisie utilisateur tous en miniscule
+        /**
+         * algorithme de recherche dans nom du recette, description et ingredients.
+         */
         recette = recette.filter((recipe) => {
             if (recipe.name.toLowerCase().includes(saisieUtil)) return true;
             if (recipe.description.toLowerCase().includes(saisieUtil)) return true;
@@ -106,6 +124,7 @@ export default {
         if (filter.container.classList.contains('expanded')) filter.input.focus();
     },
 
+    //pour cliqué en dehors et les tags son non-active
     clickOutside(e) {
         let clickTarget = e.target;
         do {
