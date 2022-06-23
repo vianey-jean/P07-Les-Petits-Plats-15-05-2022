@@ -259,8 +259,6 @@ width: 100%;
   width: 100%;
   height: var(--height);
   margin-bottom: 1.5625rem;
-  border-radius: 0.5rem;
-  background-color: #E7E7E7;
 }
 .input-group .form-control {
   flex-grow: 1;
@@ -277,7 +275,9 @@ width: 100%;
 }
 .input-group .form-label svg {
   width: 1.875rem;
-  height: 1.875rem;
+  height: 1.875rem; 
+  position: absolute;
+  z-index: 10;
 }
 
 /**
