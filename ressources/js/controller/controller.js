@@ -11,31 +11,31 @@ import recette from "../data/recipes.js";
 import Recipe from "../vue/vue.js";
 import Tag from "../vue/tag.js";
 import DomFilter from "../models/domFilter.js";
- 
+
 export default {
- 
+
     recette: [],
     filteredRecipes: [],
- 
+
     filterTypes: ['ingredients', 'appliances', 'ustensils'],
- 
+
     tags: {
         ingredients: [],
         ustensils: [],
         appliances: []
     },
- 
+
     tagsClasses: {
         ingredients: 'primary',
         appliances: 'success',
         ustensils: 'danger',
     },
- 
+
     stateTags: [],
- 
- 
+
+
     stateFilter: undefined,
- 
+
     dom: {
         search: document.querySelector('[data-search]'),
         tags: document.querySelector('[data-filter-tags]'),
@@ -47,7 +47,7 @@ export default {
         recette: document.querySelector('[data-recipes]'),
         norecipes: document.querySelector('[data-norecipes]'),
     },
- 
+
     /**
       * Filtre dans le barre de recherche
       */
@@ -58,7 +58,7 @@ export default {
         recette = recette.filter((recipe) => {
             if (recipe.name.toLowerCase().includes(saisieUtil)) return true;
             if (recipe.description.toLowerCase().includes(saisieUtil)) return true;
-           
+
             if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
             //else if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
             return false;
@@ -68,7 +68,7 @@ export default {
     },
 
     //ouverture pour être active les tags dans ingrédient, appareils et ustensils
-    activeIn (filter) {
+    activeIn(filter) {
         if (this.stateFilter) this.activeOut();// Fermeture des filtre active
         this.stateFilter = filter;// Définir le filtre active
         // Clique dehors
@@ -81,9 +81,9 @@ export default {
         filter.input.focus();
         this.renderFilter();
     },
- 
+
     //Fermeture pour etre active les tags dans ingrédient, appareils et ustensils
-    activeOut () {
+    activeOut() {
         document.removeEventListener("click", this.clickOutsideListener);
         const filter = this.stateFilter;// Shortcut
         // Réinitialiser l'état actif visuel
@@ -96,17 +96,17 @@ export default {
         //Supprimer le filtre actif
         this.stateFilter = null;
     },
- 
+
     //activation du svg pour montrer les tags respectives
-    toggle (filter) {
+    toggle(filter) {
         if (this.stateFilter != filter) this.activeIn(filter);
         // Bascule l'état visuel développé
         filter.container.classList.toggle('expanded');
         // Concentrer l'entrée sur l'ouverture
         if (filter.container.classList.contains('expanded')) filter.input.focus();
     },
- 
-    clickOutside (e) {
+
+    clickOutside(e) {
         let clickTarget = e.target;
         do {
             if (clickTarget == this.stateFilter.container) return;
@@ -114,11 +114,11 @@ export default {
         } while (clickTarget);
         this.activeOut();
     },
- 
+
     /**
       * Ajout des tags au dessus
       */
-    addTag (tag) {
+    addTag(tag) {
         const id = this.stateTags.findIndex((item) => item.name == tag.name);
         if (id < 0) {
             this.stateTags.push(tag);
@@ -126,33 +126,33 @@ export default {
             this.renderRecipes();
         }
     },
- 
+
     /**
       * suppression du tags au dessus
       */
- 
-    removeTag (tag) {
-        const id = this.stateTags.findIndex((item) => item.name == tag.name && item.type == tag.type );
+
+    removeTag(tag) {
+        const id = this.stateTags.findIndex((item) => item.name == tag.name && item.type == tag.type);
         if (id >= 0) {
             this.stateTags.splice(id, 1);
             this.renderTags();
             this.renderRecipes();
         }
     },
- 
+
     /**
       * activation des tags
       */
-    tagIsActive (tag) {
-        const id = this.stateTags.findIndex((item) => item.name == tag.name && item.type == tag.type );
+    tagIsActive(tag) {
+        const id = this.stateTags.findIndex((item) => item.name == tag.name && item.type == tag.type);
         if (id >= 0) return true;
         return false;
     },
-     
+
     /**
   * Voir les statue du tags
   */
-    checkStateTags (filtered) {
+    checkStateTags(filtered) {
         this.updateAvailableTags(filtered);
         const stateTagsLength = this.stateTags.length;
         this.stateTags.forEach((tag, key) => {
@@ -160,7 +160,7 @@ export default {
         });
         if (stateTagsLength != this.stateTags.length) this.renderTags();// Rerender on change
     },
-     
+
     /**
  * Mise a jour du Tags
  */
@@ -170,11 +170,11 @@ export default {
         });
         return recette;
     },
- 
+
     /**
   * Fonction mise a jour du tag avec les filtres  et mettre dans les tags repesctives, (ingredients, appareil et ustensils)
   */
-    updateAvailableTags (recette = this.filteredRecipes) {
+    updateAvailableTags(recette = this.filteredRecipes) {
         // supprimer tags
         this.tags.ingredients = [];
         this.tags.ustensils = [];
@@ -190,12 +190,12 @@ export default {
             if (!this.tags.appliances.includes(recipe.appliance)) this.tags.appliances.push(recipe.appliance);
         });
     },
- 
+
     /**
   * Utilisation du Fonction Filtre recherche ou etat du tags ou mise a jour du tag valable
   */
-  
-    applyFilterRecipes () {
+
+    applyFilterRecipes() {
         let filtered = [];
         if (this.dom.search.value.length < 3) filtered = this.recette;// si la saisie utilisateur est < 3, montre tous les recettes
         else filtered = this.filterSearch(this.recette);// si non applique la fonction filterSearch pour les filtre de la recherche avec la saisie utilisateur
@@ -207,7 +207,7 @@ export default {
     },
 
     //mise en forme les atgs selectionnées 
-    renderTags () {
+    renderTags() {
         this.dom.tags.innerHTML = '';
         this.stateTags.forEach((tag) => {
             const elTag = tag.renderTag(this.tagsClasses[tag.type]);
@@ -219,7 +219,7 @@ export default {
     /**
  * création d'une fonction pour faire de recherche même plus de 1 caractère dans les tags et les activé
  */
-    renderFilter () {
+    renderFilter() {
         if (!this.stateFilter) return;
         const filter = this.stateFilter; // Shortcut
         filter.results.style.display = 'none';
@@ -241,7 +241,7 @@ export default {
     /**
  * fonction pour mettre le message erreur
  */
-    renderRecipes () {
+    renderRecipes() {
         this.dom.norecipes.style.display = 'none';//message erreur est inactive
         this.applyFilterRecipes();//application des filtres de recherche sur barre de recherche
         this.dom.recette.innerHTML = '';
@@ -254,7 +254,7 @@ export default {
  * Connection avec le fichier data
  */
 
-    async fetchData () {
+    async fetchData() {
         recette.forEach((recipe) => this.recette.push(new Recipe(recipe)));
         return new Promise((resolve) => resolve(''));
     },
@@ -262,7 +262,7 @@ export default {
     /**
       * création fonction init
       */
-    async init () {
+    async init() {
         await this.fetchData();//attendre les donné avec fetchdata
         this.renderRecipes();
         // activation du recherche sur tags 
@@ -278,4 +278,3 @@ export default {
         this.dom.search.addEventListener('keyup', this.renderRecipes.bind(this));// Modification de l'entrée de recherche
     },
 }
- 

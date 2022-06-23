@@ -1,7 +1,7 @@
 /**
  * 1- Création des donnés des ingredients 
  */
- export default class Ingredient {
+export default class Ingredient {
 
     constructor(data) {
         this.name = data.ingredient.toLowerCase();

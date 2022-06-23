@@ -2,7 +2,7 @@
  * Création du dom pour les filtres resultats
  */
 
- export default class DomFilter {
+export default class DomFilter {
 
     constructor(elFilter) {
         this.name = elFilter.dataset.filter;
@@ -12,4 +12,4 @@
         this.results = elFilter.querySelector('[data-filter-results]');
         this.expand = elFilter.querySelector('[data-filter-expand]');
     }
-};
+}

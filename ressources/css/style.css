@@ -76,7 +76,7 @@ button, input {
 
 .card-picture {
   border-radius: 0.3125rem 0.3125rem 0 0;
-  background-color: #C7BEBE;
+  /*background-color: #C7BEBE;*/
   aspect-ratio: 17/8;
 }
 .card-img-top {
