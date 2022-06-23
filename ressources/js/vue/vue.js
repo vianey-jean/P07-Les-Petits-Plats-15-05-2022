@@ -2,7 +2,7 @@
  * 1- Import du Ingredients
  * 2- Création du Recipe pour récuperer tous les datas
  * 3- Création description dans la recette trouvé
- * 4- Création du squelette dans la recette trouvé
+ * 4- Création du mise en forme dans la recette trouvé
  * 5- Ajout ingrédient à la page recette
  * 6-Import Recipe
  */
@@ -13,7 +13,9 @@ import Ingredient from "../models/ingredient.js";
 
 
 export default class Recipe {
-
+    /**
+     * Création des objets que auraont besoin et des tableaus, et tous mettres en miniscule
+     */
     constructor(data) {
         this.id = data.id;
         this.name = data.name;
@@ -26,28 +28,26 @@ export default class Recipe {
         data.ustensils.forEach((ustensil) => this.ustensils.push(ustensil.toLowerCase()));
 
         this.ingredients = [];
-        data.ingredients.forEach( (ingredient) => this.ingredients.push(new Ingredient(ingredient)));
+        data.ingredients.forEach((ingredient) => this.ingredients.push(new Ingredient(ingredient)));
     }
 
-    get shortDescription () {
-        const limit = 200;
-        if (this.description.length <= limit) return this.description;
-        let description = this.description.substr(0, limit - 1);
+    get shortDescription() {
+        let description = this.description.substr();
         return description.substr(0, description.lastIndexOf(" ")) + " &hellip;";
     }
 
- 
-    tagAvailable (tag) {//pour montrer les tags qui son inclue dans chaque type avec le nom du tag
-        if (tag.type == 'ingredients') return !! this.ingredients.find((ingredient) => ingredient.name == tag.name);
+
+    tagAvailable(tag) {//pour montrer les tags qui son inclue dans chaque type avec le nom du tag
+        if (tag.type == 'ingredients') return !!this.ingredients.find((ingredient) => ingredient.name == tag.name);
         if (tag.type == 'ustensils') return this.ustensils.includes(tag.name);
         if (tag.type == 'appliances') return this.appliance == tag.name;
     }
 
- 
-    render () {
+
+    render() {
         const elRecipe = document.createElement('article');
         elRecipe.classList.add('card');
-
+        //Ajout du photo
         let photo = "";
         photo = this.name;
         photo = photo.replace(/,/g, "");
