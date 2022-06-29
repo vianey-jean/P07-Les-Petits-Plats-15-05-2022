@@ -69,7 +69,7 @@ export default {
 
     filterSearch(recette) {
         // cherche dans  name, description, ingredients name
-        const saisieUtil = this.dom.search.value.toLowerCase();//saisie utilisateur tous en miniscule
+        const saisieUtil = this.dom.search.value.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, '');//saisie utilisateur tous en miniscule
         /**
          * algorithme de recherche dans nom du recette, description et ingredients.
          */
@@ -248,7 +248,7 @@ export default {
             const tag = new Tag(item, filter.name)
             if (this.tagIsActive(tag)) return;// Escape active tags
             //recherche avancé et trouver les mots accénts
-            if (filter.input.value.length > 0 && !tag.name.normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, '').includes(filter.input.value.toLowerCase())) return;// Escape search result
+            if (filter.input.value.length > 0 && !tag.name.normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, '').includes(filter.input.value.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, ''))) return;// Escape search result
             const elTag = tag.renderLi();
             elTag.addEventListener('click', (e) => {// Add tag on click
                 e.stopPropagation();
