@@ -73,16 +73,17 @@ export default {
         /**
          * algorithme de recherche dans nom du recette, description et ingredients.
          */
+        //recherche avancé et trouver les mots avec accénts
         recette = recette.filter((recipe) => {
-            if (recipe.name.toLowerCase().includes(saisieUtil)) return true;
-            if (recipe.description.toLowerCase().includes(saisieUtil)) return true;
+            if (recipe.name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, '').includes(saisieUtil)) return true;
+            if (recipe.description.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, '').includes(saisieUtil)) return true;
 
-            if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
+            if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, '').includes(saisieUtil))) return true;
             //else if (recipe.ingredients.find((ingredient) => ingredient.name.toLowerCase().includes(saisieUtil))) return true;
             return false;
 
         });
-        return recette;
+
     },
 
     //ouverture pour être active les tags dans ingrédient, appareils et ustensils
@@ -246,7 +247,8 @@ export default {
         this.tags[filter.name].forEach((item) => {
             const tag = new Tag(item, filter.name)
             if (this.tagIsActive(tag)) return;// Escape active tags
-            if (filter.input.value.length > 0 && !tag.name.includes(filter.input.value.toLowerCase())) return;// Escape search result
+            //recherche avancé et trouver les mots accénts
+            if (filter.input.value.length > 0 && !tag.name.normalize('NFKD').replace(/[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF]+/g, '').includes(filter.input.value.toLowerCase())) return;// Escape search result
             const elTag = tag.renderLi();
             elTag.addEventListener('click', (e) => {// Add tag on click
                 e.stopPropagation();
